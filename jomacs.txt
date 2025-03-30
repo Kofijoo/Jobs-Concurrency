@@ -1,0 +1,6 @@
+✏️ Basic Nano Controls (at the bottom of the screen)
+Ctrl + O → Save changes (O = Output)
+Enter → Confirm filename when saving
+Ctrl + X → Exit
+Ctrl + K → Cut a line
+Ctrl + U → Paste a line

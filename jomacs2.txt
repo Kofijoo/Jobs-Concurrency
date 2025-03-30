@@ -1,0 +1,11 @@
+ Step-by-step Fix (HTTPS + Token):
+1. Generate a GitHub Personal Access Token (PAT)
+Go here: �� https://github.com/settings/tokens
+
+Click "Generate new token (classic)"
+Name it something like devOps Git push
+Select expiration (e.g., 30 days or 90 days)
+Under scopes, select:
+✅ repo (for full repo access)
+Click Generate Token
+Copy the token (you won’t see it again!)
