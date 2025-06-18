@@ -1,0 +1,46 @@
+name: Docker Workflow
+
+on:
+  push:
+    branches: 
+      - main
+  workflow_dispatch:
+  # schedule: 
+  # - cron: "*/1 * * * *"
+env:
+  CONTAINER_REGISTRY: docker.io
+  IMAGE_NAME: portfolio-site
+
+jobs:
+  docker:
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Docker Build
+        run: docker build -t ${{ env.CONTAINER_REGISTRY }}/${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest .
+      
+      - name: Docker Login
+        run: docker login --username=${{ vars.DOCKER_USERNAME }} --password-stdin <<< "${{ secrets.DOCKER_HUB_TOKEN }}"
+      
+      - name: Docker Publish
+        run: docker push ${{ env.CONTAINER_REGISTRY }}/${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+  
+  deploy:
+    needs: docker
+    concurrency:
+      group: production-deployment
+      cancel-in-progress: true
+    runs-on: ubuntu-latest
+    
+    steps:
+      - name: Docker Login
+        run: docker login --username=${{ vars.DOCKER_USERNAME }} --password-stdin <<< "${{ secrets.DOCKER_HUB_TOKEN }}"
+      
+      - name: Deploy Notification
+        run: echo "Docker image has been successfully published. Ready for deployment to production server."
+      
+      # Note: In a real production scenario, you would add steps here to deploy to your actual hosting environment
+      # For example, using SSH to connect to your server and pull/run the new image
