@@ -17,6 +17,9 @@ concurrency:
 jobs:
   docker:
     runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        tag: [latest, v1, dev]  # You can expand this list as needed
     
     steps:
       - name: Checkout Code
@@ -29,13 +32,14 @@ jobs:
           password: ${{ secrets.DOCKER_HUB_TOKEN }}
 
       - name: Docker Build
-        run: docker build -t ${{ env.CONTAINER_REGISTRY }}/${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest .
+        run: docker build -t ${{ env.CONTAINER_REGISTRY }}/${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ matrix.tag }} .
       
       - name: Docker Publish
-        run: docker push ${{ env.CONTAINER_REGISTRY }}/${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:latest
+        run: docker push ${{ env.CONTAINER_REGISTRY }}/${{ vars.DOCKER_USERNAME }}/${{ env.IMAGE_NAME }}:${{ matrix.tag }}
   
   deploy:
     needs: docker
+    if: ${{ contains(needs.docker.result, 'success') }}
     concurrency:
       group: production-deployment
       cancel-in-progress: true
