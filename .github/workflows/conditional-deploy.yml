@@ -1,8 +1,7 @@
 name: Docker Workflow
 
-on:
-  push
-
+# on:
+#  push: 
 env:
   CONTAINER_REGISTRY: docker.io
   IMAGE_NAME: portfolio-site
