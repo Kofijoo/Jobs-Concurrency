@@ -45,7 +45,7 @@ jobs:
 
   deploy:
     needs: docker
-    if: ${{ needs.docker.result == 'success' }}
+    if: ${{ !contains(needs.docker.result, 'failure') }}
     runs-on: ubuntu-latest
     timeout-minutes: 10
     concurrency:
