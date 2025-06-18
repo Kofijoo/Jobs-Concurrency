@@ -11,6 +11,10 @@ env:
   CONTAINER_REGISTRY: docker.io
   IMAGE_NAME: portfolio-site
 
+concurrency:
+  group: workflow-${{ github.ref }}
+  cancel-in-progress: true
+  
 jobs:
   docker:
     runs-on: ubuntu-latest
