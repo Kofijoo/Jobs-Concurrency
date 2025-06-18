@@ -1,0 +1,27 @@
+name: Matrix Configuration
+
+on:
+  push: 
+  workflow_dispatch:
+
+jobs: 
+  deploy:
+    strategy: 
+      matrix:
+        os: [ubuntu-latest, windows-latest]
+        images: [hello-world, nginx:alpine]
+        exclude:
+          - images: nginx:alpine
+            os: windows-latest
+
+    runs-on: ${{ matrix.os }}
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Echo Docker Details
+        run: docker info
+
+      - name: Run Images on ${{ matrix.os }}
+        run: docker run ${{ matrix.images }}
